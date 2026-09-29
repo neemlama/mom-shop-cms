@@ -1,0 +1,25 @@
+# Node
+server/node_modules/
+*/node_modules/
+
+# Shop data - private customer info, never commit
+server/data/*.json
+server/data/user-*.json
+server/data/shop-*.json
+
+# Generated Excel reports
+server/reports/*.xlsx
+server/reports/*/*.xlsx
+
+# Secrets / env
+.env
+*.env
+server/.env
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Deploy bundle
+mom-shop-deploy.tar.gz
