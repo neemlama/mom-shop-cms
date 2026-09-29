@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Orders Ledger - Mom Shop CMS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet"/>
+<style>body{font-family:Inter;background:#F8FAFC}h1{font-family:'Plus Jakarta Sans'}input,select{font-size:16px}.num{font-variant-numeric:tabular-nums}</style>
+</head>
+<body class="max-w-3xl mx-auto p-4 pb-20">
+<a href="../" class="text-indigo-600 text-sm">&larr; Back to Hub</a>
+<span class="ml-2 text-sm"><a href="../customers/" class="text-indigo-600">+ Add / Active orders</a></span>
+<h1 class="text-2xl font-bold text-slate-900 mt-1">Orders Ledger</h1>
+<p class="text-slate-500 text-sm">Same records as Active page. Read-only here, edit on Active page. Dates in Bikram Sambat.</p>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
+  <div class="bg-white border border-slate-200 rounded-2xl p-3"><small class="text-slate-400 text-xs">ORDERS</small><div id="stCount" class="text-xl font-bold num">0</div></div>
+  <div class="bg-white border border-slate-200 rounded-2xl p-3"><small class="text-slate-400 text-xs">REVENUE</small><div id="stRev" class="text-xl font-bold num">0</div></div>
+  <div class="bg-white border border-slate-200 rounded-2xl p-3"><small class="text-slate-400 text-xs">ADVANCE</small><div id="stAdv" class="text-xl font-bold num">0</div></div>
+  <div class="bg-indigo-600 text-white rounded-2xl p-3"><small class="text-indigo-200 text-xs">PROFIT</small><div id="stProfit" class="text-xl font-bold num">0</div></div>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-2xl p-4 mt-4 shadow-sm space-y-2">
+  <input id="search" placeholder="Search name, phone, item, route..." class="w-full border border-slate-300 rounded-lg px-3 py-3"/>
+  <div class="grid grid-cols-3 gap-2">
+    <div><label class="text-xs text-slate-500">STATUS</label><select id="fStatus" class="w-full border border-slate-300 rounded-lg px-2 py-3"><option value="">All</option><option value="active">Active</option><option value="completed">Completed</option></select></div>
+    <div><label class="text-xs text-slate-500">MONTH</label><select id="fMonth" class="w-full border border-slate-300 rounded-lg px-2 py-3"><option value="">All</option><option value="1">Baishakh</option><option value="2">Jestha</option><option value="3">Ashadh</option><option value="4">Shrawan</option><option value="5">Bhadra</option><option value="6">Ashwin</option><option value="7">Kartik</option><option value="8">Mangsir</option><option value="9">Poush</option><option value="10">Magh</option><option value="11">Falgun</option><option value="12">Chaitra</option></select></div>
+    <div><label class="text-xs text-slate-500">YEAR</label><select id="fYear" class="w-full border border-slate-300 rounded-lg px-2 py-3"><option value="">All</option></select></div>
+  </div>
+</div>
+
+<div class="flex gap-2 mt-4" id="periodRow">
+  <button data-p="today" onclick="setPeriod('today')" class="flex-1 rounded-lg py-2 text-sm bg-white border border-slate-200">Today</button>
+  <button data-p="month" onclick="setPeriod('month')" class="flex-1 rounded-lg py-2 text-sm bg-white border border-slate-200">This month</button>
+  <button data-p="past" onclick="setPeriod('past')" class="flex-1 rounded-lg py-2 text-sm bg-white border border-slate-200">Past</button>
+  <button data-p="all" onclick="setPeriod('all')" class="flex-1 rounded-lg py-2 text-sm bg-white border border-slate-200">All</button>
+</div>
+<div id="scopeNote" class="text-xs text-slate-400 mt-2"></div>
+<div id="list" class="space-y-3 mt-4"></div>
+<button onclick="exportCSV()" class="w-full bg-slate-100 rounded-lg py-3 mt-4">Export filtered CSV</button>
+
+<script src="../db.js"></script>
+<script>
+const KEY='customers_simple_v1';
+const $=id=>document.getElementById(id);
+function load(){ return dbListOrders() }
+/* BS calendar (BS_MONTHS, adToBs, bsStr) comes from db.js */
+function dstr(iso){ return bsStr(iso) }
+function initYears(){
+  const yrs=[...new Set(load().map(x=>{const b=adToBs(x.completedAt||x.createdAt);return b?b.y:null}).filter(Boolean))].sort().reverse();
+  $('fYear').innerHTML='<option value="">All</option>'+yrs.map(y=>`<option>${y}</option>`).join('');
+}
+let period='all';
+function setPeriod(p){ period=p; render() }
+function todayBs(){ return adToBs(new Date().toISOString()) }
+function filtered(){
+  const q=($('search').value||'').toLowerCase(), s=$('fStatus').value, m=$('fMonth').value, y=$('fYear').value;
+  return load().filter(x=>{
+    if(s && x.status!==s)return false;
+    if(q && !(x.name+x.phone+x.address+itemsText(x)+(x.fromA||'')+(x.toB||'')).toLowerCase().includes(q))return false;
+    const iso=x.completedAt||x.createdAt;
+    const b=iso?adToBs(iso):null;
+    if(period!=='all'){
+      const t=todayBs();
+      if(!b||!t)return false;
+      if(period==='today'&&!(b.y===t.y&&b.m===t.m&&b.d===t.d))return false;
+      if(period==='month'&&!(b.y===t.y&&b.m===t.m))return false;
+      if(period==='past'&&!((b.y<t.y)||(b.y===t.y&&b.m<t.m)))return false;
+    }
+    if((m||y)&&iso){
+      if(!b)return true;
+      if(m && b.m!==Number(m))return false;
+      if(y && b.y!==Number(y))return false; }
+    return true;
+  }).sort((a,b)=>(b.completedAt||b.createdAt||'').localeCompare(a.completedAt||a.createdAt||''));
+}
+function del(id){ if(!confirm('Delete?'))return; dbRemoveOrder(id); initYears(); render() }
+function complete(id){ dbSetStatus(id,'completed'); initYears(); render() }
+function reopen(id){ dbSetStatus(id,'active'); initYears(); render() }
+function goEdit(id){ location.href='../customers/?edit='+id }
+function getItems(x){ if(Array.isArray(x.items)&&x.items.length)return x.items; return [{name:x.item||'Item',qty:x.qty??1,ws:x.ws??0,sp:x.sp??0}] }
+function itemsText(x){ return getItems(x).map(i=>`${i.name||'Item'} x ${i.qty} — sell ${(Number(i.sp)||0).toLocaleString()} / cost ${(Number(i.ws)||0).toLocaleString()}`).join(' ; ') }
+function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function render(){
+  const a=filtered();
+  $('stCount').textContent=a.length;
+  $('stRev').textContent=a.reduce((s,x)=>{const it=getItems(x);return s+it.reduce((t,i)=>t+(Number(i.sp)||0)*(Number(i.qty)||0),0)-(Number(x.disc)||0)},0).toLocaleString();
+  $('stAdv').textContent=a.reduce((s,x)=>s+(x.adv||0),0).toLocaleString();
+  $('stProfit').textContent=a.reduce((s,x)=>s+(x.prof||0),0).toLocaleString();
+  document.querySelectorAll('#periodRow button').forEach(b=>{
+    b.className='flex-1 rounded-lg py-2 text-sm '+(b.dataset.p===period?'bg-indigo-600 text-white':'bg-white border border-slate-200');
+  });
+  const t=todayBs();
+  $('scopeNote').textContent=period==='today'?'Showing today · '+bsStr(new Date().toISOString()):period==='month'?'Showing this BS month · '+(t?BS_MONTHS[t.m-1]+' '+t.y:''):period==='past'?'Showing past orders (before this month)':'Showing all orders';
+  $('list').innerHTML=a.length?a.map(x=>`<div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+    <div class="flex justify-between gap-2"><div><b>${esc(x.name)}</b>
+    <span class="ml-2 text-xs px-2 py-0.5 rounded-full ${x.status==='completed'?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'}">${x.status==='completed'?'Completed '+esc(dstr(x.completedAt)):'Active'}</span>
+    <div class="text-sm text-slate-500 num">${esc(x.phone)} ${esc(x.address)?'• '+esc(x.address):''}</div>
+    <div class="text-sm mt-1">${getItems(x).map(i=>`<div>${esc(i.name||'Item')} x ${i.qty} — sell ${(Number(i.sp)||0).toLocaleString()} / cost ${(Number(i.ws)||0).toLocaleString()}</div>`).join('')}</div></div></div>
+    <div class="grid grid-cols-4 gap-2 mt-2 text-center text-sm">
+      <div class="bg-slate-50 rounded-lg p-2"><small class="text-slate-400">FINAL</small><div class="font-bold num">${(x.fin||0).toLocaleString()}</div></div>
+      <div class="bg-slate-50 rounded-lg p-2"><small class="text-slate-400">ADV</small><div class="font-bold num">${(x.adv||0).toLocaleString()}</div></div>
+      <div class="bg-slate-50 rounded-lg p-2"><small class="text-slate-400">${(x.adv||0)>0?'DUE':'BAL'}</small><div class="font-bold num">${(x.bal||0).toLocaleString()}</div></div>
+      <div class="bg-indigo-50 rounded-lg p-2"><small class="text-slate-400">PROFIT</small><div class="font-bold text-indigo-600 num">${(x.prof||0).toLocaleString()}</div></div>
+    </div>
+    <div class="text-xs text-slate-400 mt-1 num">${x.fromA||x.toB?esc(x.fromA||'')+' → '+esc(x.toB||'')+' • ':''}Delivery ${(x.del||0).toLocaleString()} • Discount ${(x.disc||0).toLocaleString()}</div>
+    <div class="flex gap-2 mt-2">
+      <button onclick="goEdit('${x.id}')" class="text-sm bg-slate-100 rounded-lg px-3 py-2">Edit</button>
+      ${x.status==='completed'
+        ? `<button onclick="reopen('${x.id}')" class="text-sm bg-slate-100 rounded-lg px-3 py-2">Reopen</button>`
+        : `<button onclick="complete('${x.id}')" class="text-sm bg-emerald-600 text-white rounded-lg px-3 py-2">Mark completed</button>`}
+      <button onclick="del('${x.id}')" class="text-sm bg-rose-50 text-rose-600 rounded-lg px-3 py-2">Delete</button>
+    </div>
+  </div>`).join(''):'<p class="text-slate-400 text-sm">No orders match. Add on Customers page.</p>';
+}
+function exportCSV(){
+  const a=filtered(); if(!a.length){alert('Nothing to export');return}
+  const rows=[['name','phone','address','items','total_qty','selling_subtotal','wholesale_total','fromA','toB','delivery_passthrough','discount','advance','final_to_collect','revenue_ex_delivery','balance','profit','status','bsDate','completedAt']];
+  a.forEach(x=>{const it=getItems(x);const tq=it.reduce((s,i)=>s+(Number(i.qty)||0),0);const ss=it.reduce((s,i)=>s+(Number(i.sp)||0)*(Number(i.qty)||0),0);const wc=it.reduce((s,i)=>s+(Number(i.ws)||0)*(Number(i.qty)||0),0);rows.push([x.name,x.phone,x.address,itemsText(x),tq,ss,wc,x.fromA||'',x.toB||'',x.del,x.disc,x.adv,x.fin,ss-(Number(x.disc)||0),x.bal,x.prof,x.status,bsStr(x.completedAt||x.createdAt),x.completedAt||''])});
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const b=new Blob([csv],{type:'text/csv'}); const u=URL.createObjectURL(b);
+  const l=document.createElement('a'); l.href=u; l.download='orders.csv'; l.click(); URL.revokeObjectURL(u);
+}
+['search','fStatus','fMonth','fYear'].forEach(id=>$(id).addEventListener('input',render));
+initYears(); render(); dbBootSync(() => { initYears(); render(); });
+window.addEventListener('storage',()=>{initYears();render()});
+</script>
+</body></html>

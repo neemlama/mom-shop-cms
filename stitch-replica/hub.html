@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Profit / Loss + Balance Sheet</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet"/>
+<style>body{font-family:Inter;background:#F8FAFC}h1,h2{font-family:'Plus Jakarta Sans'}select{font-size:16px}.num{font-variant-numeric:tabular-nums}</style>
+</head>
+<body class="max-w-3xl mx-auto p-4 pb-20">
+<a href="./" class="text-indigo-600 text-sm">&larr; Back</a>
+<span class="ml-2 text-sm"><a href="./customers/" class="text-indigo-600">Active</a> • <a href="./orders/" class="text-indigo-600">Orders</a></span>
+<h1 class="text-2xl font-bold text-slate-900 mt-1">Profit / Loss + Balance Sheet</h1>
+<p class="text-slate-500 text-sm">From your saved orders. Dates in Bikram Sambat.</p>
+
+<div class="bg-white border border-slate-200 rounded-2xl p-4 mt-4 shadow-sm">
+  <div class="grid grid-cols-2 gap-2">
+    <div><label class="text-xs text-slate-500">BS YEAR</label><select id="fYear" class="w-full border border-slate-300 rounded-lg px-2 py-3"></select></div>
+    <div><label class="text-xs text-slate-500">BS MONTH</label><select id="fMonth" class="w-full border border-slate-300 rounded-lg px-2 py-3"></select></div>
+  </div>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-2xl p-4 mt-4 shadow-sm">
+  <h2 class="font-bold text-slate-900">Profit / Loss <span id="plScope" class="text-sm font-normal text-slate-400"></span></h2>
+  <div id="plRows" class="mt-2 text-[15px]"></div>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-2xl p-4 mt-4 shadow-sm">
+  <h2 class="font-bold text-slate-900">Balance Sheet <span class="text-sm font-normal text-slate-400">as of now, all time</span></h2>
+  <div id="bsRows" class="mt-2 text-[15px]"></div>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-2xl p-4 mt-4 shadow-sm overflow-x-auto">
+  <h2 class="font-bold text-slate-900">Monthly statement <span id="mtScope" class="text-sm font-normal text-slate-400"></span></h2>
+  <table class="w-full text-sm mt-2 num"><thead><tr class="text-left text-slate-400 text-xs">
+    <th class="py-2">MONTH</th><th class="text-right">ORDERS</th><th class="text-right">REVENUE</th><th class="text-right">COST</th><th class="text-right">PROFIT</th><th class="text-right">DELIV.</th>
+  </tr></thead><tbody id="mtBody"></tbody>
+  <tfoot><tr class="font-bold border-t"><td class="py-2">Total</td><td class="text-right" id="mtOrders"></td><td class="text-right" id="mtRev"></td><td class="text-right" id="mtCost"></td><td class="text-right text-indigo-600" id="mtProf"></td><td class="text-right" id="mtDel"></td></tr></tfoot></table>
+</div>
+
+<div class="flex gap-2 mt-4">
+  <button onclick="exportCSV()" class="flex-1 bg-slate-100 rounded-lg py-3">Export monthly CSV</button>
+</div>
+<div class="bg-white border border-slate-200 rounded-2xl p-4 mt-4 shadow-sm">
+  <h2 class="font-bold text-slate-900">Month-end reports (.xlsx)</h2>
+  <div id="reportList" class="mt-2"></div>
+</div>
+<div class="bg-white border border-slate-200 rounded-2xl p-4 mt-4 shadow-sm" id="cloudCard" style="display:none">
+  <h2 class="font-bold text-slate-900">Cloud reports (server disk)</h2>
+  <p class="text-sm text-slate-500">Made on server at 11:30pm NPT even with your browser closed. Download anytime.</p>
+  <div id="cloudList" class="mt-2"></div>
+</div>
+<div class="bg-white border border-slate-200 rounded-2xl p-4 mt-4 shadow-sm">
+  <h2 class="font-bold text-slate-900">AI dataset export</h2>
+  <p class="text-sm text-slate-500">Four clean tables with IDs: customers, products, orders, transactions. No repeated phone numbers.</p>
+  <div class="grid grid-cols-2 gap-2 mt-2">
+    <button onclick="dbExport('customers')" class="bg-slate-100 rounded-lg py-2 text-sm">Customers</button>
+    <button onclick="dbExport('products')" class="bg-slate-100 rounded-lg py-2 text-sm">Products</button>
+    <button onclick="dbExport('orders')" class="bg-slate-100 rounded-lg py-2 text-sm">Orders</button>
+    <button onclick="dbExport('transactions')" class="bg-slate-100 rounded-lg py-2 text-sm">Transactions</button>
+  </div>
+</div>
+
+<script src="./db.js"></script>
+<script>
+const KEY='customers_simple_v1';
+const $=id=>document.getElementById(id);
+/* BS calendar (BS_MONTHS, adToBs, bsStr) comes from db.js */
+function load(){ return dbListOrders() }
+function getItems(x){ if(Array.isArray(x.items)&&x.items.length)return x.items; return [{name:x.item||'Item',qty:x.qty??1,ws:x.ws??0,sp:x.sp??0}] }
+function sums(list){
+  let ss=0,wc=0,disc=0,del=0,adv=0,fin=0,prof=0,bal=0;
+  list.forEach(x=>{
+    const it=getItems(x);
+    ss+=it.reduce((s,i)=>s+(Number(i.sp)||0)*(Number(i.qty)||0),0);
+    wc+=it.reduce((s,i)=>s+(Number(i.ws)||0)*(Number(i.qty)||0),0);
+    disc+=Number(x.disc)||0; del+=Number(x.del)||0; adv+=Number(x.adv)||0;
+    fin+=Number(x.fin)||0; prof+=Number(x.prof)||0; bal+=Number(x.bal)||0;
+  });
+  return {ss:ss,wc:wc,disc:disc,del:del,adv:adv,fin:fin,prof:prof,bal:bal,rev:ss-disc,n:list.length};
+}
+const f=v=>(Number(v)||0).toLocaleString();
+function prow(label,val,bold,cls){ return `<div class="flex justify-between py-1.5 border-b border-slate-100"><span class="text-slate-500">${label}</span><span class="num ${bold?'font-bold':''} ${cls||''}">${f(val)}</span></div>` }
+function init(){
+  const yrs=[...new Set(load().map(x=>{const b=adToBs(x.completedAt||x.createdAt);return b?b.y:null}).filter(Boolean))];
+  const now=adToBs(new Date().toISOString());
+  if(now&&!yrs.includes(now.y))yrs.push(now.y);
+  yrs.sort().reverse();
+  $('fYear').innerHTML=yrs.map(y=>`<option>${y}</option>`).join('')||'<option>2083</option>';
+  $('fMonth').innerHTML='<option value="">Full year</option>'+BS_MONTHS.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+}
+function inScope(x){
+  const y=Number($('fYear').value), m=$('fMonth').value;
+  const b=adToBs(x.completedAt||x.createdAt);
+  if(!b)return false;
+  if(b.y!==y)return false;
+  if(m&&b.m!==Number(m))return false;
+  return true;
+}
+function render(){
+  const y=Number($('fYear').value), m=$('fMonth').value;
+  const set=load().filter(inScope);
+  const s=sums(set);
+  const scopeName=(m?BS_MONTHS[Number(m)-1]+' ':'Full year ')+y;
+  $('plScope').textContent='· '+scopeName+' · '+s.n+' orders';
+  $('plRows').innerHTML=
+    prow('Gross sales (selling total)',s.ss)+
+    prow('(-) Discounts',s.disc)+
+    prow('(=) Revenue (yours, ex delivery)',s.rev,true)+
+    prow('(-) Wholesale cost',s.wc)+
+    prow('(=) Net profit',s.prof,true,'text-indigo-600')+
+    `<div class="flex justify-between py-1.5"><span class="text-slate-400 text-sm">Delivery pass-through to courier (not income)</span><span class="num text-sm text-slate-400">${f(s.del)}</span></div>`;
+  const a=sums(load());
+  $('bsRows').innerHTML=
+    prow('Cash collected (advance)',a.adv)+
+    prow('Still due from customers (DUE/BAL, incl. delivery)',a.bal)+
+    prow('To collect total (revenue + delivery)',a.fin,true)+
+    prow('Revenue yours (ex delivery)',a.rev,true)+
+    prow('Total profit sitting in orders',a.prof,true,'text-indigo-600');
+  $('mtScope').textContent='· BS '+y;
+  let tn=0,tr=0,tc=0,tp=0,td=0,html='';
+  for(let i=1;i<=12;i++){
+    const rows=load().filter(x=>{const b=adToBs(x.completedAt||x.createdAt);return b&&b.y===y&&b.m===i});
+    const r=sums(rows);
+    tn+=r.n; tr+=r.rev; tc+=r.wc; tp+=r.prof; td+=r.del;
+    html+=`<tr class="border-t border-slate-100"><td class="py-2">${BS_MONTHS[i-1]}</td><td class="text-right">${r.n}</td><td class="text-right">${f(r.rev)}</td><td class="text-right">${f(r.wc)}</td><td class="text-right ${r.prof<0?'text-rose-600':''}">${f(r.prof)}</td><td class="text-right text-slate-400">${f(r.del)}</td></tr>`;
+  }
+  $('mtBody').innerHTML=html;
+  $('mtOrders').textContent=tn; $('mtRev').textContent=f(tr); $('mtCost').textContent=f(tc); $('mtProf').textContent=f(tp); $('mtDel').textContent=f(td);
+}
+function exportCSV(){
+  const y=Number($('fYear').value);
+  const rows=[['bs_year','bs_month','orders','revenue_ex_delivery','delivery_passthrough','wholesale_cost','discounts','advance','balance_due','profit']];
+  for(let i=1;i<=12;i++){
+    const list=load().filter(x=>{const b=adToBs(x.completedAt||x.createdAt);return b&&b.y===y&&b.m===i});
+    const r=sums(list);
+    rows.push([y,BS_MONTHS[i-1],r.n,r.rev,r.del,r.wc,r.disc,r.adv,r.bal,r.prof]);
+  }
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const b=new Blob([csv],{type:'text/csv'}); const u=URL.createObjectURL(b);
+  const l=document.createElement('a'); l.href=u; l.download='monthly-statement-'+y+'.csv'; l.click(); URL.revokeObjectURL(u);
+}
+['fYear','fMonth'].forEach(id=>$(id).addEventListener('input',render));
+function esc2(s){ try{return new Date(s).toLocaleString()}catch(e){return s||''} }
+function downloadCurrentMonth(){ const b=adToBs(new Date().toISOString()); if(!b){alert('Today is outside the known BS table (ends Chaitra 2083)');return} dbDownloadMonthReport(b.y,b.m); }
+function renderReports(){
+  let r=[]; try{r=JSON.parse(localStorage.getItem('shop_reports')||'[]')}catch(e){r=[]}
+  const now=adToBs(new Date().toISOString());
+  let html=`<div class="text-sm text-slate-500 mb-2">Auto-saves at 11:30pm on the last day of each BS month while any page is open. Re-download rebuilds from live data, so cancelled orders drop out.</div>
+  <button onclick="downloadCurrentMonth()" class="w-full bg-indigo-600 text-white rounded-lg py-3 mb-2">Download this month now (${now?BS_MONTHS[now.m-1]+' '+now.y:''})</button>`;
+  html+=r.length?r.map(x=>`<div class="flex justify-between items-center py-2 border-b border-slate-100 text-sm"><div><b>${x.month} ${x.y}</b><div class="text-slate-400 text-xs">${x.orders} orders · profit ${Number(x.profit).toLocaleString()} · saved ${esc2(x.at)}</div></div><button onclick="dbDownloadMonthReport(${x.y},${x.m})" class="bg-slate-100 rounded-lg px-3 py-2">Re-download</button></div>`).join(''):'<p class="text-sm text-slate-400">No month-end reports yet.</p>';
+  $('reportList').innerHTML=html;
+}
+async function loadCloudReports(){
+  try{
+    const base=(typeof window.SERVER_URL!=='undefined'&&window.SERVER_URL)?window.SERVER_URL:location.origin;
+    const r=await fetch(base+'/api/reports'); if(!r.ok)return;
+    const rows=await r.json(); if(!rows.length)return;
+    $('cloudCard').style.display='block';
+    $('cloudList').innerHTML=rows.map(x=>`<div class="flex justify-between items-center py-2 border-b border-slate-100 text-sm"><div><b>${x.file}</b><div class="text-slate-400 text-xs">${(x.size/1024).toFixed(1)} KB · ${new Date(x.mtime).toLocaleString()}</div></div><a class="bg-slate-100 rounded-lg px-3 py-2" href="${base}/api/reports/${x.file}">Download</a></div>`).join('');
+  }catch(e){}
+}
+init(); render(); renderReports(); loadCloudReports(); dbBootSync(() => { render(); renderReports(); });
+</script>
+</body></html>

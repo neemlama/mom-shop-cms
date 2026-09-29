@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mom Shop CMS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet"/>
+<style>body{font-family:Inter;background:#F8FAFC}h1,h2{font-family:'Plus Jakarta Sans'}</style></head>
+<body class="p-8 max-w-4xl mx-auto">
+<div class="flex justify-between items-start">
+<div>
+<h1 class="text-3xl font-bold text-slate-900">Mom Shop CMS</h1>
+<p class="text-slate-500 mt-1">Customers, orders, and monthly accounts.</p>
+</div>
+<button onclick="fetch('/api/logout',{method:'POST'}).finally(()=>location.href='/login.html')" class="bg-slate-100 rounded-lg px-4 py-2 text-sm h-fit">Sign out</button>
+</div>
+<div class="grid gap-4 mt-6">
+<a href="./customers/" class="block bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md"><b>Active Orders</b><br/><small class="text-slate-500">add customers, items, advance, delivery, profit</small></a>
+<a href="./orders/" class="block bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md"><b>Orders Ledger</b><br/><small class="text-slate-500">all orders with status and month filters</small></a>
+<a href="./hub.html" class="block bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md"><b>Profit / Loss + Balance Sheet</b><br/><small class="text-slate-500">monthly BS statement, cash collected, dues, profit</small></a>
+</div>
+<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm mt-4">
+<b>Shared shop</b><br/><small class="text-slate-500">You and mom log in separately but share one books.</small>
+<div id="shopBox" class="text-sm mt-2">Loading...</div>
+<div class="flex gap-2 mt-2">
+<input id="joinCode" placeholder="Invite code" class="flex-1 border border-slate-300 rounded-lg px-3 py-2"/>
+<button onclick="joinShop()" class="bg-slate-100 rounded-lg px-4 py-2 text-sm">Join</button>
+</div>
+<div class="flex gap-2 mt-2">
+<button onclick="makeInvite()" class="flex-1 bg-indigo-600 text-white rounded-lg py-2 text-sm">Create invite code</button>
+<button onclick="leaveShop()" class="bg-slate-100 rounded-lg px-4 py-2 text-sm">Leave</button>
+</div>
+<div id="shopMsg" class="text-sm mt-2"></div>
+</div>
+<script>
+async function shopApi(path, body){
+  const r = await fetch(path, { method: body ? 'POST' : 'GET', headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+  if (!r.ok) { let m = 'failed'; try { const j = await r.json(); if (j.error) m = j.error; } catch (e) {} throw new Error(m); }
+  return r.json();
+}
+async function renderShop(){
+  try {
+    const s = await shopApi('/api/shop');
+    document.getElementById('shopBox').innerHTML = 'Shop: <b>' + s.shop + '</b> · Members: ' + s.members.map(m => m.username).join(', ');
+  } catch (e) { document.getElementById('shopBox').textContent = 'Shop info needs server connection.'; }
+}
+async function makeInvite(){
+  try { const r = await shopApi('/api/shop/invite', {}); document.getElementById('shopMsg').innerHTML = 'Code: <b>' + r.code + '</b> (valid 24h). Mom enters it in Join.'; }
+  catch (e) { document.getElementById('shopMsg').textContent = e.message; }
+}
+async function joinShop(){
+  const code = document.getElementById('joinCode').value.trim();
+  if (!code) return;
+  try { const r = await shopApi('/api/shop/join', { code }); document.getElementById('shopMsg').textContent = 'Joined shop ' + r.shop + '. Reload pages to see shared data.'; renderShop(); }
+  catch (e) { document.getElementById('shopMsg').textContent = e.message; }
+}
+async function leaveShop(){
+  try { await shopApi('/api/shop/leave', {}); document.getElementById('shopMsg').textContent = 'Back to your own shop.'; renderShop(); }
+  catch (e) { document.getElementById('shopMsg').textContent = e.message; }
+}
+renderShop();
+</script>
+</body></html>

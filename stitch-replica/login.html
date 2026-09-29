@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sign in - Mom Shop CMS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet"/>
+<style>body{font-family:Inter;background:#F8FAFC}h1{font-family:'Plus Jakarta Sans'}input{font-size:17px}</style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+<div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm w-full max-w-sm">
+  <h1 class="text-2xl font-bold text-slate-900">Mom Shop CMS</h1>
+  <p class="text-slate-500 text-sm mt-1">Private. Sign in to continue.</p>
+  <form class="mt-4 space-y-3" onsubmit="return login(event)">
+    <input id="u" placeholder="Username" autocomplete="username" class="w-full border border-slate-300 rounded-lg px-3 py-3"/>
+    <input id="p" type="password" placeholder="Password" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-3"/>
+    <div id="err" class="text-rose-600 text-sm" style="display:none"></div>
+    <button id="goBtn" class="w-full bg-indigo-600 text-white rounded-lg py-3 font-semibold min-h-[52px]">Sign in</button>
+  </form>
+  <p class="text-sm text-slate-500 mt-3 text-center"><span id="swapText">New here?</span> <button type="button" onclick="setMode(mode==='login'?'register':'login')" id="swapBtn" class="text-indigo-600 font-semibold">Create account</button></p>
+</div>
+<script>
+fetch('/api/me').then(r=>{ if(r.ok) location.href='/' }).catch(()=>{});
+let mode='login';
+function setMode(m){ mode=m; document.getElementById('goBtn').textContent=m==='login'?'Sign in':'Create account'; document.getElementById('swapText').textContent=m==='login'?'New here?':'Have an account?'; document.getElementById('swapBtn').textContent=m==='login'?'Create account':'Sign in'; }
+async function login(e){
+  e.preventDefault();
+  const err=document.getElementById('err');
+  err.style.display='none';
+  try{
+    const r=await fetch(mode==='register'?'/api/register':'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:document.getElementById('u').value,password:document.getElementById('p').value})});
+    if(!r.ok){ let m='Wrong username or password.'; try{const j=await r.json(); if(j.error)m=j.error}catch(e){} err.textContent=m; err.style.display='block'; return false }
+    location.href='/';
+  }catch(ex){ err.textContent='Cannot reach server.'; err.style.display='block' }
+  return false;
+}
+</script>
+</body></html>

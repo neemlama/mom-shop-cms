@@ -1,0 +1,13 @@
+[Unit]
+Description=Mom Shop CMS server
+After=network.target
+
+[Service]
+WorkingDirectory=/home/ubuntu/mom-shop-cms/server
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=5
+Environment=PORT=3000
+
+[Install]
+WantedBy=multi-user.target

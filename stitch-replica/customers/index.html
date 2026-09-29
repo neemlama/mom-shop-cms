@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Active Orders - Mom Shop CMS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet"/>
+<style>body{font-family:Inter;background:#F8FAFC}h1,h2{font-family:'Plus Jakarta Sans'}input,textarea{font-size:16px}.num{font-variant-numeric:tabular-nums}</style>
+</head>
+<body class="max-w-3xl mx-auto p-4 pb-20">
+<a href="../" class="text-indigo-600 text-sm">&larr; Back to Hub</a> <a href="../orders/" class="text-sm ml-3 bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">Orders &rarr;</a>
+<h1 class="text-2xl font-bold text-slate-900 mt-1">Active Orders</h1>
+<p class="text-slate-500 text-sm">Stays here until you mark completed. Completed orders live on Orders page.</p>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
+  <div class="bg-white border border-slate-200 rounded-2xl p-3"><small class="text-slate-400 text-xs">CUSTOMERS</small><div id="stCount" class="text-xl font-bold num">0</div></div>
+  <div class="bg-white border border-slate-200 rounded-2xl p-3"><small class="text-slate-400 text-xs">REVENUE (FINAL)</small><div id="stRev" class="text-xl font-bold num">0</div></div>
+  <div class="bg-white border border-slate-200 rounded-2xl p-3"><small class="text-slate-400 text-xs">ADVANCE</small><div id="stAdv" class="text-xl font-bold num">0</div></div>
+  <div class="bg-indigo-600 text-white rounded-2xl p-3"><small class="text-indigo-200 text-xs">PROFIT</small><div id="stProfit" class="text-xl font-bold num">0</div></div>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-2xl p-4 mt-4 shadow-sm">
+  <input id="search" placeholder="Search name, phone, or address..." class="w-full border border-slate-300 rounded-lg px-3 py-3"/>
+</div>
+
+<form id="f" class="bg-white border border-slate-200 rounded-2xl p-4 mt-4 shadow-sm space-y-5" onsubmit="return save(event)">
+  <div>
+    <h2 class="font-bold text-slate-900">1. Customer</h2>
+    <div class="grid gap-2 mt-2">
+      <input id="name" placeholder="Customer name *" required class="border border-slate-300 rounded-lg px-3 py-3"/>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <input id="phone" placeholder="Phone" class="border border-slate-300 rounded-lg px-3 py-3 num"/>
+        <input id="address" placeholder="Address" class="border border-slate-300 rounded-lg px-3 py-3"/>
+      </div>
+      <textarea id="notes" rows="2" placeholder="Notes (size, preference...)" class="border border-slate-300 rounded-lg px-3 py-2"></textarea>
+    </div>
+  </div>
+  <div>
+    <h2 class="font-bold text-slate-900">2. Order items</h2>
+    <div id="itemRows" class="grid gap-2 mt-2"></div>
+    <button type="button" onclick="addRow()" class="w-full bg-slate-100 rounded-lg py-2 text-sm mt-2">+ Add item</button>
+    <div class="mt-2"><label class="text-xs text-slate-500">ADVANCE PAYMENT</label><input id="adv" type="number" min="0" value="0" class="w-full border border-slate-300 rounded-lg px-3 py-3 num"/></div>
+  </div>
+  <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+    <h2 class="font-bold text-slate-900">3. Delivery, discount, profit, final price</h2>
+    <div class="grid grid-cols-2 gap-2 mt-2">
+      <div><label class="text-xs text-slate-500">DELIVERY FROM (A)</label><input id="fromA" placeholder="ex Yangon depot" class="w-full border border-slate-300 rounded-lg px-3 py-3"/></div>
+      <div><label class="text-xs text-slate-500">DELIVERY TO (B)</label><input id="toB" placeholder="ex Mandalay" class="w-full border border-slate-300 rounded-lg px-3 py-3"/></div>
+    </div>
+    <div class="grid grid-cols-2 gap-2 mt-2">
+      <div><label class="text-xs text-slate-500">DELIVERY CHARGE</label><input id="del" type="number" min="0" value="0" class="w-full border border-slate-300 rounded-lg px-3 py-3 num"/></div>
+      <div><label class="text-xs text-slate-500">DISCOUNT</label><input id="disc" type="number" min="0" value="0" class="w-full border border-slate-300 rounded-lg px-3 py-3 num"/></div>
+    </div>
+    <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+      <div class="bg-white rounded-lg border p-2"><small class="text-slate-400 text-xs">PROFIT</small><div id="vProfit" class="font-bold text-indigo-600 num">0</div></div>
+      <div class="bg-white rounded-lg border p-2"><small class="text-slate-400 text-xs">FINAL PRICE</small><div id="vFinal" class="font-bold num">0</div></div>
+      <div class="bg-white rounded-lg border p-2"><small id="vBalLabel" class="text-slate-400 text-xs">BALANCE DUE</small><div id="vBal" class="font-bold num">0</div></div>
+    </div>
+    <p class="text-xs text-slate-400 mt-2">Revenue = sum(selling x qty) - discount. Final to collect = revenue + delivery (delivery goes to courier, not income). Profit = revenue - wholesale cost.</p>
+  </div>
+  <button id="saveBtn" class="w-full bg-indigo-600 text-white rounded-lg py-4 font-semibold min-h-[52px]">Save Customer + Order</button>
+  <button id="cancelBtn" type="button" onclick="cancelEdit()" style="display:none" class="w-full bg-slate-100 rounded-lg py-3">Cancel edit</button>
+</form>
+
+<div id="list" class="space-y-3 mt-4"></div>
+
+<div class="flex gap-2 mt-4">
+  <button onclick="exportCSV()" class="flex-1 bg-slate-100 rounded-lg py-3">Export CSV</button>
+  <button onclick="clearAll()" class="flex-1 bg-rose-50 text-rose-600 rounded-lg py-3">Clear all</button>
+</div>
+
+<script src="../db.js"></script>
+<script>
+const KEY='customers_simple_v1';
+const $=id=>document.getElementById(id);
+const n=v=>Number(v||0);
+function rows(){ return [...document.querySelectorAll('#itemRows .irow')].map(r=>({name:r.querySelector('.rn').value.trim(),qty:n(r.querySelector('.rq').value),ws:n(r.querySelector('.rw').value),sp:n(r.querySelector('.rs').value)})) }
+function addRow(d){
+  d=d||{name:'',qty:1,ws:0,sp:0};
+  const div=document.createElement('div');
+  div.className='irow bg-slate-50 border border-slate-200 rounded-xl p-2 grid gap-2';
+  div.innerHTML=`<div class="grid grid-cols-3 gap-2">
+    <input placeholder="Item (ex Pants L)" value="${esc(d.name)}" class="rn col-span-2 border border-slate-300 rounded-lg px-3 py-2"/>
+    <input type="number" min="1" value="${d.qty}" class="rq border border-slate-300 rounded-lg px-3 py-2 num"/></div>
+  <div class="grid grid-cols-2 gap-2">
+    <div><label class="text-xs text-slate-500">WHOLESALE</label><input type="number" min="0" value="${d.ws}" class="rw w-full border border-slate-300 rounded-lg px-3 py-2 num"/></div>
+    <div><label class="text-xs text-slate-500">SELLING</label><input type="number" min="0" value="${d.sp}" class="rs w-full border border-slate-300 rounded-lg px-3 py-2 num"/></div>
+  </div>
+  <button type="button" class="text-rose-500 text-xs text-left">Remove item</button>`;
+  div.querySelectorAll('input').forEach(i=>i.addEventListener('input',calc));
+  div.querySelector('button').onclick=()=>{ if(document.querySelectorAll('#itemRows .irow').length>1)div.remove(); calc() };
+  $('itemRows').appendChild(div); calc();
+}
+function resetRows(){ $('itemRows').innerHTML=''; addRow(); }
+function getItems(x){ if(Array.isArray(x.items)&&x.items.length)return x.items; return [{name:x.item||'Item',qty:x.qty??1,ws:x.ws??0,sp:x.sp??0}] }
+function itemsText(x){ return getItems(x).map(i=>`${i.name||'Item'} x ${i.qty} — sell ${(Number(i.sp)||0).toLocaleString()} / cost ${(Number(i.ws)||0).toLocaleString()}`).join(' ; ') }
+function calc(){
+  const items=rows();
+  const sub=items.reduce((s,i)=>s+(Number(i.sp)||0)*(Number(i.qty)||0),0);
+  const cost=items.reduce((s,i)=>s+(Number(i.ws)||0)*(Number(i.qty)||0),0);
+  const del=n($('del').value), disc=n($('disc').value), adv=n($('adv').value);
+  const fin=sub-disc+del, prof=sub-cost-disc, bal=fin-adv;
+  $('vProfit').textContent=prof.toLocaleString();
+  $('vFinal').textContent=fin.toLocaleString();
+  $('vBal').textContent=bal.toLocaleString();
+  $('vBalLabel').textContent=adv>0?'DUE':'BALANCE DUE';
+  return {sub,cost,fin,prof,bal,items};
+}
+['del','disc','adv'].forEach(id=>$(id).addEventListener('input',calc));
+function load(){ return dbListOrders() }
+let editingId=null;
+function save(e){
+  e.preventDefault();
+  if(!$('name').value.trim()){alert('Customer name required');return false}
+  const c=calc();
+  const view={name:$('name').value.trim(),phone:$('phone').value.trim(),address:$('address').value.trim(),notes:$('notes').value.trim(),items:c.items,adv:n($('adv').value),fromA:$('fromA').value.trim(),toB:$('toB').value.trim(),del:n($('del').value),disc:n($('disc').value)};
+  dbSaveOrder(view,editingId);
+  editingId=null; $('saveBtn').textContent='Save Customer + Order'; $('cancelBtn').style.display='none';
+  e.target.reset(); resetRows(); render();
+  return false;
+}
+function edit(id){
+  const x=load().find(v=>v.id===id); if(!x)return;
+  editingId=id;
+  $('name').value=x.name||'';$('phone').value=x.phone||'';$('address').value=x.address||'';$('notes').value=x.notes||'';
+  $('itemRows').innerHTML=''; getItems(x).forEach(i=>addRow(i));$('adv').value=x.adv??0;
+  $('fromA').value=x.fromA||'';$('toB').value=x.toB||'';$('del').value=x.del??0;$('disc').value=x.disc??0;
+  calc(); $('saveBtn').textContent='Update Customer'; $('cancelBtn').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'}); $('name').focus();
+}
+function cancelEdit(){ editingId=null; document.getElementById('f').reset(); resetRows(); $('saveBtn').textContent='Save Customer + Order'; $('cancelBtn').style.display='none'; }
+function del(id){ dbRemoveOrder(id); render() }
+function complete(id){ dbSetStatus(id,'completed'); location.href='../orders/'; }
+function clearAll(){ if(confirm('Delete all?')){dbWipeAll();render()} }
+function render(){
+  const q=($('search').value||'').toLowerCase();
+  const all=load().map(x=>x.status?x:{...x,status:'active'});
+  const act=all.filter(x=>x.status==='active');
+  const a=act.filter(x=>!q||(x.name+x.phone+x.address+(x.fromA||'')+(x.toB||'')).toLowerCase().includes(q));
+  $('stCount').textContent=act.length;
+  $('stRev').textContent=act.reduce((s,x)=>{const it=getItems(x);return s+it.reduce((t,i)=>t+(Number(i.sp)||0)*(Number(i.qty)||0),0)-(Number(x.disc)||0)},0).toLocaleString();
+  $('stAdv').textContent=act.reduce((s,x)=>s+x.adv,0).toLocaleString();
+  $('stProfit').textContent=act.reduce((s,x)=>s+x.prof,0).toLocaleString();
+  $('list').innerHTML=a.length?a.map(x=>`<div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+    <div class="flex justify-between gap-2"><div><b>${esc(x.name)}</b><div class="text-sm text-slate-500 num">${esc(x.phone)} ${esc(x.address)?'• '+esc(x.address):''}</div>
+    ${x.notes?`<div class="text-sm text-slate-500">Note: ${esc(x.notes)}</div>`:''}
+    <div class="text-sm mt-1">${getItems(x).map(i=>`<div>${esc(i.name||'Item')} x ${i.qty} — sell ${(Number(i.sp)||0).toLocaleString()} / cost ${(Number(i.ws)||0).toLocaleString()}</div>`).join('')}</div></div>
+    <div class="flex gap-2 h-fit flex-col items-end"><div class="flex gap-2"><button onclick="edit('${x.id}')" class="text-indigo-600 text-sm">Edit</button><button onclick="del('${x.id}')" class="text-rose-500 text-sm">Delete</button></div><button onclick="complete('${x.id}')" class="text-sm bg-emerald-600 text-white px-3 py-2 rounded-lg">Mark completed</button></div></div>
+    <div class="grid grid-cols-4 gap-2 mt-2 text-center text-sm">
+      <div class="bg-slate-50 rounded-lg p-2"><small class="text-slate-400">FINAL</small><div class="font-bold num">${x.fin.toLocaleString()}</div></div>
+      <div class="bg-slate-50 rounded-lg p-2"><small class="text-slate-400">ADV</small><div class="font-bold num">${x.adv.toLocaleString()}</div></div>
+      <div class="bg-slate-50 rounded-lg p-2"><small class="text-slate-400">${x.adv>0?'DUE':'BAL'}</small><div class="font-bold num">${x.bal.toLocaleString()}</div></div>
+      <div class="bg-indigo-50 rounded-lg p-2"><small class="text-slate-400">PROFIT</small><div class="font-bold text-indigo-600 num">${x.prof.toLocaleString()}</div></div>
+    </div>
+    <div class="text-xs text-slate-400 mt-1 num">${x.fromA||x.toB?esc(x.fromA||'')+' → '+esc(x.toB||'')+' • ':''}Delivery ${x.del.toLocaleString()} • Discount ${x.disc.toLocaleString()}</div>
+  </div>`).join(''):'<p class="text-slate-400 text-sm">No customers yet. Add first above.</p>';
+}
+function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function exportCSV(){
+  const a=load(); if(!a.length){alert('Nothing to export');return}
+  const rows=[['name','phone','address','notes','items','total_qty','selling_subtotal','wholesale_total','fromA','toB','delivery','discount','advance','final_to_collect','revenue_ex_delivery','balance','profit']];
+  a.forEach(x=>{const it=getItems(x);const tq=it.reduce((s,i)=>s+(Number(i.qty)||0),0);const ss=it.reduce((s,i)=>s+(Number(i.sp)||0)*(Number(i.qty)||0),0);const wc=it.reduce((s,i)=>s+(Number(i.ws)||0)*(Number(i.qty)||0),0);rows.push([x.name,x.phone,x.address,x.notes,itemsText(x),tq,ss,wc,x.fromA||'',x.toB||'',x.del,x.disc,x.adv,x.fin,ss-(Number(x.disc)||0),x.bal,x.prof])});
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const b=new Blob([csv],{type:'text/csv'}); const u=URL.createObjectURL(b);
+  const l=document.createElement('a'); l.href=u; l.download='customers.csv'; l.click(); URL.revokeObjectURL(u);
+}
+$('search').addEventListener('input',render);
+resetRows(); render(); dbBootSync(() => render());
+(function(){ const id=new URLSearchParams(location.search).get('edit'); if(id)edit(id); })();
+</script>
+</body></html>

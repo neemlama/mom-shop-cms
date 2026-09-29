@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-primary-container":"#dad7ff","on-primary-fixed":"#0f0069","on-error":"#ffffff","inverse-surface":"#213145","surface-container-high":"#dce9ff","on-error-container":"#93000a","inverse-on-surface":"#eaf1ff","on-secondary-fixed-variant":"#3f465c","on-surface-variant":"#464555","surface-bright":"#f8f9ff","on-tertiary-fixed":"#2c0051","surface-container-low":"#eff4ff","on-surface":"#0b1c30","primary-container":"#4f46e5","background":"#f8f9ff","on-background":"#0b1c30","on-primary-fixed-variant":"#3323cc","on-secondary":"#ffffff","secondary-container":"#dae2fd","on-tertiary":"#ffffff","secondary-fixed-dim":"#bec6e0","tertiary-container":"#8822df","surface-container":"#e5eeff","tertiary-fixed":"#f0dbff","outline-variant":"#c7c4d8","primary":"#3525cd","on-tertiary-fixed-variant":"#6800b4","secondary-fixed":"#dae2fd","inverse-primary":"#c3c0ff","tertiary-fixed-dim":"#ddb8ff","outline":"#777587","primary-fixed-dim":"#c3c0ff","tertiary":"#6b00b8","on-secondary-container":"#5c647a","error-container":"#ffdad6","surface-dim":"#cbdbf5","surface-tint":"#4d44e3","on-secondary-fixed":"#131b2e","surface-container-lowest":"#ffffff","on-tertiary-container":"#ebd2ff","surface":"#f8f9ff","primary-fixed":"#e2dfff","on-primary":"#ffffff","error":"#ba1a1a","secondary":"#565e74","surface-variant":"#d3e4fe","surface-container-highest":"#d3e4fe"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-sm":"0.5rem","space-xs":"0.25rem","margin-tablet":"1.5rem","space-lg":"1rem","space-md":"0.75rem","margin":"1rem","gutter":"1rem","space-xl":"1.5rem","gutter-sm":"0.75rem"},fontFamily:{"label-sm":["Inter"],"headline-md":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"body-lg":["Inter"],"headline-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"body-sm":["Inter"],"numeric-callout":["Plus Jakarta Sans"],"label-md":["Inter"],"label-lg":["Inter"],"body-md":["Inter"]},fontSize:{"label-sm":["11px",{"lineHeight":"14px","fontWeight":"700"}],"headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],"headline-xl":["32px",{"lineHeight":"40px","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"500"}],"headline-lg":["24px",{"lineHeight":"32px","fontWeight":"700"}],"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"18px","fontWeight":"400"}],"numeric-callout":["28px",{"lineHeight":"34px","fontWeight":"700"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-72 bg-surface-container-low z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-16 px-space-xl flex items-center gap-space-md bg-surface-container-lowest"><img alt="Brand logo. - Primary color: #4f46e5
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UwiSnygOBO6_FVDv3PLJo4YhTsQFU0emSptzu8EHAe67AT30B7LNHuNlAZxcIqWGl-NrjJbgDMSqipduEIqREw6UxqxkkdP4CSrTWMw2ueqBVZ0ew_YnZiJooKvc_w6Q23lLMyoBXmlYbkRQIdO6g78jc62PfOH3-fqSxDgsl1jMqip8CDEYXLbrBPR19ArAh391Z2yMMZ7XfQOqL0MtN3uEYS1DG0Nz479DtvA46vRRWi6Gvm0NFl9f8"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface leading-tight">LiveSales</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">Merchant Hub</span></div></div><div class="px-space-md pt-space-lg"><div class="px-space-md pb-space-xs"><span class="font-label-sm text-label-sm uppercase text-outline tracking-wider">Management Ledger</span></div><nav class="flex flex-col gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-label-lg rounded-lg"><a class="flex items-center gap-space-md px-space-md py-space-md rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="orders-and-financial-ledger" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>Orders &amp; Financial Ledger</span></a><a class="flex items-center gap-space-md px-space-md py-space-md rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="customer-directory-and-notebook" href="#"><span class="material-symbols-outlined text-[20px]">contact_page</span><span>Customer Directory &amp; Notebook</span></a><a class="flex items-center gap-space-md px-space-md py-space-md rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="monthly-excel-statements" href="#"><span class="material-symbols-outlined text-[20px]">table_chart</span><span>Monthly Excel Statements</span></a><a class="flex items-center gap-space-md px-space-md py-space-md rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="live-session-notes" href="#"><span class="material-symbols-outlined text-[20px]">edit_note</span><span>Live Session Notes</span></a></nav></div></div><div class="p-space-lg flex flex-col gap-space-md"><div class="flex items-center justify-between px-space-md py-space-sm rounded-lg bg-surface-container"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-sm text-label-sm text-on-surface">Cloud Sync Active</span></div><span class="material-symbols-outlined text-[16px] text-on-surface-variant">cloud_done</span></div><a class="flex items-center justify-center gap-space-sm w-full py-space-sm px-space-md rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high hover:text-on-surface transition-colors shadow-[0_1px_8px_rgba(0,0,0,0.04)] font-label-md text-label-md" data-path="monthly-excel-statements" href="#"><span class="material-symbols-outlined text-[18px]">download</span><span>Quick Excel Export</span></a><div class="flex items-center gap-space-md px-space-xs pt-space-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-on-surface truncate">Admin / Mom's Shop</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">TikTok Live Store #01</span></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full px-space-xl flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-md flex-1 max-w-lg"><div class="relative w-full"><span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span><input class="w-full pl-10 pr-space-md py-space-xs rounded-lg bg-surface-container-low text-on-surface placeholder:text-on-surface-variant font-body-md text-body-md outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all" placeholder="Search buyer handle, phone, invoice, item code..." type="text"/></div></div><div class="flex items-center gap-space-lg"><div class="hidden xl:flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-secondary-container text-on-secondary-container"><span class="material-symbols-outlined text-[16px]">sensors</span><span class="font-label-sm text-label-sm">Stream Session #42 - Data Synced</span></div><div class="hidden md:flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface">Today's Live Ledger</span><span class="font-body-sm text-body-sm text-on-surface-variant">Oct 24 • 08:45 PM GMT+8</span></div><button class="flex items-center gap-space-xs bg-primary text-on-primary px-space-lg py-space-sm rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-[0_1px_8px_rgba(0,0,0,0.04)] font-label-md text-label-md" type="button"><span class="material-symbols-outlined text-[18px]">add</span><span>+ Add Order / Customer</span></button><button class="relative p-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-error"></span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Interactive Modal Container (Hidden by Default) -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm p-space-lg" id="quickClaimModal">
+<div class="bg-surface-container-lowest rounded-xl max-w-xl w-full p-space-xl shadow-xl flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="p-space-xs rounded-lg bg-primary-container text-on-primary-container">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Log New Stream Order Claim</h3>
+</div>
+<button class="p-space-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-colors" onclick="document.getElementById('quickClaimModal').classList.add('hidden')" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-space-md">
+<div class="col-span-2 flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Customer Handle / Buyer Name</label>
+<input class="px-space-md py-space-sm rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface outline-none focus:bg-surface-container-lowest shadow-sm" placeholder="@tiktok_username or Name" type="text"/>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Item SKU / Tag Code</label>
+<input class="px-space-md py-space-sm rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface outline-none focus:bg-surface-container-lowest shadow-sm" placeholder="#DRS-092" type="text"/>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Wholesale Cost ($)</label>
+<input class="px-space-md py-space-sm rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface outline-none focus:bg-surface-container-lowest shadow-sm" placeholder="22.00" type="number"/>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Retail Price ($)</label>
+<input class="px-space-md py-space-sm rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface outline-none focus:bg-surface-container-lowest shadow-sm" placeholder="58.00" type="number"/>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Stream Discount / Deal</label>
+<input class="px-space-md py-space-sm rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface outline-none focus:bg-surface-container-lowest shadow-sm" placeholder="5.00" type="number"/>
+</div>
+<div class="col-span-2 flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Courier / Route Assignment</label>
+<select class="px-space-md py-space-sm rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface outline-none">
+<option>RapidPost Metro (+$8.50)</option>
+<option>Central Depot Ground (+$7.20)</option>
+<option>Warehouse A Priority (+$10.00)</option>
+</select>
+</div>
+</div>
+<div class="flex items-center justify-end gap-space-md pt-space-sm">
+<button class="px-space-lg py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="document.getElementById('quickClaimModal').classList.add('hidden')" type="button">
+          Cancel
+        </button>
+<button class="px-space-xl py-space-sm rounded-lg bg-primary-container text-on-primary font-label-md text-label-md shadow-md hover:bg-primary transition-colors flex items-center gap-space-xs" onclick="document.getElementById('quickClaimModal').classList.add('hidden')" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Save &amp; Log To Stream</span>
+</button>
+</div>
+</div>
+</div>
+<div class="p-space-xl flex flex-col gap-space-lg">
+<!-- Screen Header & Operational Bar -->
+<div class="flex flex-col xl:flex-row xl:items-center justify-between gap-space-lg">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-sm py-space-xs rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-space-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+            Live Recording Mode
+          </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Stream Session #42 • Studio Cam A</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight mt-space-xs">Orders &amp; Financial Ledger</h1>
+</div>
+<!-- Action Cluster -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="relative">
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-sm hover:bg-surface-container-high transition-colors" id="streamFilterBtn">
+<span class="material-symbols-outlined text-primary text-[18px]">podcasts</span>
+<span>Filter: Session #42 (Today)</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[16px]">expand_more</span>
+</button>
+</div>
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-sm hover:bg-surface-container-high transition-colors" onclick="exportSimulation()">
+<span class="material-symbols-outlined text-primary text-[18px]">download_for_offline</span>
+<span>Export Excel (.xlsx)</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-xl py-space-sm rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg shadow-md hover:bg-primary transition-all active:scale-[0.98]" onclick="document.getElementById('quickClaimModal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>+ Log New Order Claim</span>
+</button>
+</div>
+</div>
+<!-- Real-time Financial Breakdown Strip -->
+<div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-space-md">
+<!-- Card 1 -->
+<div class="flex flex-col p-space-md rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Today's Orders</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">shopping_bag</span>
+</div>
+<div class="mt-space-sm flex items-baseline gap-space-xs">
+<span class="font-numeric-callout text-numeric-callout text-on-surface">18</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">pcs</span>
+</div>
+<span class="mt-space-xs font-body-sm text-body-sm text-primary flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 100% Verified
+        </span>
+</div>
+<!-- Card 2 -->
+<div class="flex flex-col p-space-md rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Retail Gross</span>
+<span class="material-symbols-outlined text-primary text-[18px]">monetization_on</span>
+</div>
+<div class="mt-space-sm font-numeric-callout text-numeric-callout text-on-surface">$1,420.00</div>
+<span class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">From 18 live claims</span>
+</div>
+<!-- Card 3 -->
+<div class="flex flex-col p-space-md rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Wholesale Cost</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">inventory_2</span>
+</div>
+<div class="mt-space-sm font-numeric-callout text-numeric-callout text-on-surface-variant">$580.00</div>
+<span class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">Inventory stock out</span>
+</div>
+<!-- Card 4 -->
+<div class="flex flex-col p-space-md rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Discounts</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">sell</span>
+</div>
+<div class="mt-space-sm font-numeric-callout text-numeric-callout text-secondary">-$125.00</div>
+<span class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">Chat promo codes</span>
+</div>
+<!-- Card 5 -->
+<div class="flex flex-col p-space-md rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Courier Freight</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">local_shipping</span>
+</div>
+<div class="mt-space-sm font-numeric-callout text-numeric-callout text-on-surface">+$142.50</div>
+<span class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">18 shipping tags</span>
+</div>
+<!-- Card 6 -->
+<div class="flex flex-col p-space-md rounded-xl bg-secondary-container shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-secondary-fixed-variant uppercase tracking-wider">COD In Transit</span>
+<span class="material-symbols-outlined text-primary text-[18px]">pending_actions</span>
+</div>
+<div class="mt-space-sm font-numeric-callout text-numeric-callout text-on-surface">$1,295.00</div>
+<span class="mt-space-xs font-body-sm text-body-sm text-on-secondary-fixed-variant">Doorstep cash flow</span>
+</div>
+<!-- Card 7: Net Profit highlight -->
+<div class="col-span-2 md:col-span-2 xl:col-span-1 flex flex-col p-space-md rounded-xl bg-primary-container text-on-primary shadow-md relative overflow-hidden">
+<div class="flex items-center justify-between relative z-10">
+<span class="font-label-sm text-label-sm text-on-primary-container uppercase tracking-wider">Net Profit</span>
+<span class="px-space-xs py-0.5 rounded text-[10px] font-bold bg-primary text-on-primary">+50.3%</span>
+</div>
+<div class="mt-space-sm font-numeric-callout text-numeric-callout text-on-primary relative z-10">+$715.00</div>
+<div class="mt-space-xs font-body-sm text-body-sm text-on-primary-container relative z-10 flex items-center justify-between">
+<span>Est. Realized</span>
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+</div>
+</div>
+</div>
+<!-- Filter Tab Bar & Utility Bar -->
+<div class="flex flex-col gap-space-md bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+<!-- Tabs -->
+<div class="flex items-center gap-space-xs overflow-x-auto pb-space-xs">
+<button class="px-space-md py-space-xs rounded-full bg-primary-container text-on-primary font-label-md text-label-md flex items-center gap-space-xs whitespace-nowrap">
+<span>All Orders</span>
+<span class="px-space-xs rounded-full bg-primary text-[11px] font-bold">18</span>
+</button>
+<button class="px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-label-md text-label-md flex items-center gap-space-xs whitespace-nowrap transition-colors">
+<span>Needs Call</span>
+<span class="px-space-xs rounded-full bg-surface-container-highest text-[11px] font-bold">4</span>
+</button>
+<button class="px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-label-md text-label-md flex items-center gap-space-xs whitespace-nowrap transition-colors">
+<span>Ready to Pack</span>
+<span class="px-space-xs rounded-full bg-surface-container-highest text-[11px] font-bold">5</span>
+</button>
+<button class="px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-label-md text-label-md flex items-center gap-space-xs whitespace-nowrap transition-colors">
+<span>In Transit / Out</span>
+<span class="px-space-xs rounded-full bg-surface-container-highest text-[11px] font-bold">6</span>
+</button>
+<button class="px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high font-label-md text-label-md flex items-center gap-space-xs whitespace-nowrap transition-colors">
+<span>Delivered &amp; Paid</span>
+<span class="px-space-xs rounded-full bg-surface-container-highest text-[11px] font-bold">3</span>
+</button>
+<button class="px-space-md py-space-xs rounded-full bg-error-container text-on-error-container hover:bg-surface-container-high font-label-md text-label-md flex items-center gap-space-xs whitespace-nowrap transition-colors">
+<span>Doorstep Returns</span>
+<span class="px-space-xs rounded-full bg-on-error text-error text-[11px] font-bold">1</span>
+</button>
+</div>
+<!-- Controls Row: Search + Hub Dropdowns -->
+<div class="flex flex-col lg:flex-row items-center justify-between gap-space-md pt-space-xs">
+<div class="flex items-center gap-space-md w-full lg:max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full pl-10 pr-space-md py-space-sm rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md outline-none focus:bg-surface-container-lowest shadow-sm" placeholder="Search order tag, customer handle, phone, courier tracking..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full lg:w-auto justify-end">
+<!-- Courier Depot filter -->
+<div class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-low text-on-surface font-label-md text-label-md">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">hub</span>
+<select class="bg-transparent font-label-md text-label-md text-on-surface outline-none cursor-pointer">
+<option>All Hubs (Depot A, Main, RapidPost)</option>
+<option>Central Depot Ground</option>
+<option>Warehouse A Priority</option>
+<option>RapidPost Express</option>
+</select>
+</div>
+<!-- Date Dropdown -->
+<div class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-low text-on-surface font-label-md text-label-md">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">calendar_today</span>
+<span>Today (Oct 24, 2024)</span>
+</div>
+<button class="p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Table Columns">
+<span class="material-symbols-outlined text-[20px]">view_column</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Master Ledger Table -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider select-none">
+<th class="py-space-md px-space-md whitespace-nowrap">Order &amp; Stream</th>
+<th class="py-space-md px-space-md whitespace-nowrap">Customer / TikTok Handle</th>
+<th class="py-space-md px-space-md whitespace-nowrap">Claimed Garment Details</th>
+<th class="py-space-md px-space-sm whitespace-nowrap text-right">Wholesale</th>
+<th class="py-space-md px-space-sm whitespace-nowrap text-right">Retail</th>
+<th class="py-space-md px-space-sm whitespace-nowrap text-right">Promo</th>
+<th class="py-space-md px-space-md whitespace-nowrap">Courier Route &amp; Hub</th>
+<th class="py-space-md px-space-sm whitespace-nowrap text-right">Deposit</th>
+<th class="py-space-md px-space-md whitespace-nowrap text-right">COD Due</th>
+<th class="py-space-md px-space-md whitespace-nowrap text-right">Net Profit</th>
+<th class="py-space-md px-space-md whitespace-nowrap text-center">Status / Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1: Elena Rostova -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-md whitespace-nowrap align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">#LIV-1083</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Stream #42 • 8:15 PM</span>
+<span class="mt-1 inline-block px-1.5 py-0.5 rounded text-[10px] bg-secondary-container text-on-secondary-container w-fit">Live Pin Claim</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top">
+<div class="flex flex-col gap-space-xs min-w-[180px]">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-lg text-label-lg text-on-surface">Elena Rostova</span>
+<span class="px-1 py-0.5 rounded text-[10px] bg-surface-container-high text-on-surface font-semibold">VIP Buyer</span>
+</div>
+<span class="font-body-sm text-body-sm text-primary">@elena_style_tok</span>
+<div class="flex items-center gap-space-xs mt-1">
+<a class="flex items-center gap-space-xs px-2 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high" href="tel:+15554329011">
+<span class="material-symbols-outlined text-[14px] text-primary">call</span>
+<span>+1 (555) 432-9011</span>
+</a>
+<button class="p-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high" title="WhatsApp Message">
+<span class="material-symbols-outlined text-[14px]">chat</span>
+</button>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Dallas, TX 75201</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top">
+<div class="flex items-start gap-space-sm min-w-[220px]">
+<div class="w-12 h-14 rounded-lg bg-surface-container overflow-hidden shrink-0 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="High quality commercial garment shot of an oversized wool blend knit sweater in warm cream color, folded neatly on display table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC94830VJ9_NBbuJPFLjPIEzdoPpJSdDUtY0JnSKuE2iFbkiqENPX53Zc3er8vZtqzwjNcx8jKRyhpbd8-0h4yFlD7Q6_jZzDVhLcPZXX5UgcG2UQLQpqn_3-zkqG5w1NNetx9_GjzR65SRotTDN056riAzjX50Y2Cp63efWvgiGK7-C2fVeqpCkm3RL5GMLI82Zk0m_7gJ-MEj_JToLvvAqB3NFV9ratM47DB0rFT1rg9QpwtvaNoI"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface line-clamp-1">Oversized Wool Knit</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Color: Cream • Size: M</span>
+<span class="font-label-sm text-label-sm text-outline mt-1">Tag #KNIT-CRM-08</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-on-surface-variant">$18.00</td>
+<td class="py-space-md px-space-sm text-right align-top font-label-md text-label-md text-on-surface">$52.00</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-secondary">-$5.00</td>
+<td class="py-space-md px-space-md align-top min-w-[160px]">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface">
+<span class="material-symbols-outlined text-[14px] text-primary">local_shipping</span>
+<span>Depot A → Dallas North</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">RapidPost (+$9.00)</span>
+<span class="font-body-sm text-body-sm text-outline">TRK-981249</span>
+</div>
+</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-on-surface-variant">$0.00</td>
+<td class="py-space-md px-space-md text-right align-top">
+<div class="flex flex-col items-end">
+<span class="font-numeric-callout text-[18px] text-primary leading-tight font-bold">$56.00</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase">Cash on Delivery</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right align-top">
+<div class="flex flex-col items-end">
+<span class="font-numeric-callout text-[18px] text-on-surface leading-tight font-bold">+$29.00</span>
+<span class="font-label-sm text-[10px] text-primary font-semibold">51.7% Net</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top text-center min-w-[150px]">
+<div class="flex flex-col items-center gap-space-xs">
+<span class="px-space-md py-space-xs rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">phone_in_talk</span>
+<span>Pending Call</span>
+</span>
+<div class="flex items-center gap-space-xs mt-1">
+<button class="px-2 py-1 rounded bg-primary-container text-on-primary font-label-sm text-label-sm hover:bg-primary shadow-sm transition-colors">
+                      Confirm
+                    </button>
+<button class="p-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]">more_vert</span>
+</button>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2: Maya Lin -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-md whitespace-nowrap align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">#LIV-1082</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Stream #42 • 8:02 PM</span>
+<span class="mt-1 inline-block px-1.5 py-0.5 rounded text-[10px] bg-surface-container-high text-on-surface w-fit">Direct Fast Claim</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top">
+<div class="flex flex-col gap-space-xs min-w-[180px]">
+<span class="font-label-lg text-label-lg text-on-surface">Maya Lin</span>
+<span class="font-body-sm text-body-sm text-primary">@mayalin_daily</span>
+<div class="flex items-center gap-space-xs mt-1">
+<a class="flex items-center gap-space-xs px-2 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high" href="tel:+15552098871">
+<span class="material-symbols-outlined text-[14px] text-primary">call</span>
+<span>+1 (555) 209-8871</span>
+</a>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Seattle, WA 98101</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top">
+<div class="flex items-start gap-space-sm min-w-[220px]">
+<div class="w-12 h-14 rounded-lg bg-surface-container overflow-hidden shrink-0 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Product photograph of off-white wide leg linen trousers hanging cleanly on a bamboo hanger against clean studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu7x4oUlP3_bR9-H5COPYD2j4aZ-QnoqVLh1Atl7Ofr996P21snnmJ0jxe1kcX21mvxZ070A2UnvLhpqetAu9dEXHWDuUr_8HpnMhtte7RczYAKXEi6XSbdCMlzWI1xJK8nAuvY-R9gZ1d_Eizzs6v6Zso75WyIyWEWEwUnK-jgNnOF-LIe6aDKoFb9p27zcYZo-lBzrRjcom6_PiBdiBAWOKMpHP2c0T7IHZuZUBeOra02CM536Ob"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface line-clamp-1">Casual Linen Pants</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Color: Off-White • Size: S</span>
+<span class="font-label-sm text-label-sm text-outline mt-1">Tag #PNT-WHT-02</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-on-surface-variant">$16.00</td>
+<td class="py-space-md px-space-sm text-right align-top font-label-md text-label-md text-on-surface">$45.00</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-on-surface-variant">$0.00</td>
+<td class="py-space-md px-space-md align-top min-w-[160px]">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface">
+<span class="material-symbols-outlined text-[14px] text-primary">local_shipping</span>
+<span>Depot A → Seattle Downtown</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Central Depot (+$7.50)</span>
+<span class="font-body-sm text-body-sm text-outline">TRK-449102</span>
+</div>
+</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-secondary">-$10.00 (Zelle)</td>
+<td class="py-space-md px-space-md text-right align-top">
+<div class="flex flex-col items-end">
+<span class="font-numeric-callout text-[18px] text-primary leading-tight font-bold">$42.50</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase">Remaining COD</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right align-top">
+<div class="flex flex-col items-end">
+<span class="font-numeric-callout text-[18px] text-on-surface leading-tight font-bold">+$29.00</span>
+<span class="font-label-sm text-[10px] text-primary font-semibold">64.4% Net</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top text-center min-w-[150px]">
+<div class="flex flex-col items-center gap-space-xs">
+<span class="px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm font-bold flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">inventory</span>
+<span>Ready to Pack</span>
+</span>
+<div class="flex items-center gap-space-xs mt-1">
+<button class="px-2 py-1 rounded bg-surface-container-lowest text-on-surface font-label-sm text-label-sm hover:bg-surface-container shadow-sm border border-surface-container">
+                      Print Waybill
+                    </button>
+<button class="p-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[16px]">more_vert</span>
+</button>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 3: Sarah Jenkins -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-md whitespace-nowrap align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">#LIV-1081</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Stream #42 • 7:48 PM</span>
+<span class="mt-1 inline-block px-1.5 py-0.5 rounded text-[10px] bg-surface-container-high text-on-surface w-fit">Special Live Bundle</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top">
+<div class="flex flex-col gap-space-xs min-w-[180px]">
+<span class="font-label-lg text-label-lg text-on-surface">Sarah Jenkins</span>
+<span class="font-body-sm text-body-sm text-primary">@sarah_j_style</span>
+<div class="flex items-center gap-space-xs mt-1">
+<a class="flex items-center gap-space-xs px-2 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high" href="tel:+15558839023">
+<span class="material-symbols-outlined text-[14px] text-primary">call</span>
+<span>+1 (555) 883-9023</span>
+</a>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Austin, TX 78704</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top">
+<div class="flex items-start gap-space-sm min-w-[220px]">
+<div class="w-12 h-14 rounded-lg bg-surface-container overflow-hidden shrink-0 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="High end luxury studio shot of an emerald green satin silk blouse on a mannequin with soft ambient spotlighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPW8Ifgk8vLC633_i5RzJwuRmeETz1rxl3D9lWy3B3ziR0iqg5GlP9UHGjkwt1BvzW02sVMYYhHIHcwhYHNKv_7IBNmYPc0ZbH0g6Z9pTfa8mDIc-jn-4w7B3qlFLLnY17Ef5gY1PZjzn-wtEPGqUpTvjIdhQhlcpAtrKUoP9vY6Bo9WVD6G8fdlzaBT4I8vg4yk7RCXeE-VU5SJTMTalmvJjWRQ9EjWNn2HtsQsjLhS8n5yA008xK"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface line-clamp-1">Silk Blouse</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Color: Emerald Green • Size: S</span>
+<span class="font-label-sm text-label-sm text-outline mt-1">Tag #BLS-EMR-01</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-on-surface-variant">$14.00</td>
+<td class="py-space-md px-space-sm text-right align-top font-label-md text-label-md text-on-surface">$38.00</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-secondary">-$5.00</td>
+<td class="py-space-md px-space-md align-top min-w-[160px]">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface">
+<span class="material-symbols-outlined text-[14px] text-primary">local_shipping</span>
+<span>Depot A → Austin Central</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">RapidPost (+$8.50)</span>
+<span class="font-body-sm text-body-sm text-outline">TRK-109230</span>
+</div>
+</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-on-surface-variant">$0.00</td>
+<td class="py-space-md px-space-md text-right align-top">
+<div class="flex flex-col items-end">
+<span class="font-numeric-callout text-[18px] text-primary leading-tight font-bold">$41.50</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase">Full COD</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right align-top">
+<div class="flex flex-col items-end">
+<span class="font-numeric-callout text-[18px] text-on-surface leading-tight font-bold">+$19.00</span>
+<span class="font-label-sm text-[10px] text-primary font-semibold">50.0% Net</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top text-center min-w-[150px]">
+<div class="flex flex-col items-center gap-space-xs">
+<span class="px-space-md py-space-xs rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+<span>In Transit</span>
+</span>
+<div class="flex items-center gap-space-xs mt-1">
+<button class="px-2 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high">
+                      Track Live
+                    </button>
+<button class="p-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[16px]">more_vert</span>
+</button>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 4: Tiffany Ross (Returned / High Risk Alert) -->
+<tr class="bg-error-container/20 hover:bg-error-container/30 transition-colors">
+<td class="py-space-md px-space-md whitespace-nowrap align-top">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-error font-bold">#LIV-1076</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Stream #41 • Yesterday</span>
+<span class="mt-1 inline-block px-1.5 py-0.5 rounded text-[10px] bg-error text-on-error font-bold w-fit">Doorstep Reject</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top">
+<div class="flex flex-col gap-space-xs min-w-[180px]">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-lg text-label-lg text-error font-bold">Tiffany Ross</span>
+<span class="px-1 py-0.5 rounded text-[10px] bg-error text-on-error font-bold">Blacklisted</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">@tiff_glam_9</span>
+<div class="flex items-center gap-space-xs mt-1">
+<a class="flex items-center gap-space-xs px-2 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm" href="tel:+15557761102">
+<span class="material-symbols-outlined text-[14px]">call</span>
+<span>+1 (555) 776-1102</span>
+</a>
+</div>
+<span class="font-body-sm text-body-sm text-error font-medium">Refused COD Delivery</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top">
+<div class="flex items-start gap-space-sm min-w-[220px]">
+<div class="w-12 h-14 rounded-lg bg-surface-container overflow-hidden shrink-0 shadow-sm opacity-80">
+<img class="w-full h-full object-cover" data-alt="Chic powder pink floral chiffon maxi dress suspended on minimalist white display rack with neutral backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb8UQGroPBRpvFSLEIR2EytVwUqbLVJMg0y1qgTCODZ9_TdbTe5-ve0l-lXq67BSXrGkJYNHuWZwObwYE9aobeW4za7YwkB5hG3GaecXiFryehLqd8OsvM-OeMM65oEieEJX8plU5WGLVoG2DJwxlWiSmadHHxzEdYprI6rgj7MoP_Ve4XIPy9fyw5V6aV7-2uVqtTGfDTvi6ySFsrANcYpkE-FcoDvi2E4dIW2Zurc3w_CMk-sxZI"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface line-clamp-1">Floral Chiffon Maxi</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Color: Powder Pink • M</span>
+<span class="font-label-sm text-label-sm text-outline mt-1">Returned to Hub Depot A</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-on-surface-variant">$22.00</td>
+<td class="py-space-md px-space-sm text-right align-top font-label-md text-label-md text-on-surface">$65.00</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-secondary">-$10.00</td>
+<td class="py-space-md px-space-md align-top min-w-[160px]">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Depot A → Atlanta SE</span>
+<span class="font-body-sm text-body-sm text-error font-semibold">Courier Surcharge +$9.50</span>
+<span class="font-body-sm text-body-sm text-outline">TRK-009823</span>
+</div>
+</td>
+<td class="py-space-md px-space-sm text-right align-top font-body-md text-body-md text-on-surface-variant">$0.00</td>
+<td class="py-space-md px-space-md text-right align-top">
+<div class="flex flex-col items-end">
+<span class="font-numeric-callout text-[18px] text-error line-through leading-tight font-bold">$64.50</span>
+<span class="font-label-sm text-[10px] text-error uppercase font-bold">Uncollected</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right align-top">
+<div class="flex flex-col items-end">
+<span class="font-numeric-callout text-[18px] text-error leading-tight font-bold">-$9.50</span>
+<span class="font-label-sm text-[10px] text-error font-semibold">Courier Loss</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-top text-center min-w-[150px]">
+<div class="flex flex-col items-center gap-space-xs">
+<span class="px-space-md py-space-xs rounded-full bg-error text-on-error font-label-sm text-label-sm font-bold flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">undo</span>
+<span>Returned</span>
+</span>
+<div class="flex items-center gap-space-xs mt-1">
+<button class="px-2 py-1 rounded bg-error-container text-on-error-container font-label-sm text-label-sm hover:bg-surface-container-high">
+                      File Courier Claim
+                    </button>
+<button class="p-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[16px]">more_vert</span>
+</button>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Ledger Table Footer: Sticky Column Sums -->
+<div class="bg-surface-container-high px-space-lg py-space-md flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="flex flex-wrap items-center gap-space-xl">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Current Page:</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">4 of 18 Orders Displayed</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Wholesale Total:</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">$70.00</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Gross Retail:</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">$200.00</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Page Net COD:</span>
+<span class="font-label-md text-label-md text-primary font-bold">$140.00</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Page Net Profit:</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">+$67.50</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-md py-space-xs rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-md text-label-md shadow-sm disabled:opacity-50" disabled="">
+            Previous
+          </button>
+<div class="flex items-center gap-1">
+<span class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md flex items-center justify-center font-bold">1</span>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center justify-center">2</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center justify-center">3</button>
+</div>
+<button class="px-space-md py-space-xs rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md shadow-sm">
+            Next
+          </button>
+</div>
+</div>
+</div>
+<!-- Quick Financial Statement Generator & Sync Ledger Bar -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col lg:flex-row items-center justify-between gap-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">receipt_long</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Generate Monthly Excel Statement (.xlsx)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Includes full breakdown: COD reconciliation, courier slip numbers, returns liability, and wholesale ledger.</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md w-full lg:w-auto justify-end">
+<div class="flex flex-col text-right">
+<span class="font-label-sm text-label-sm text-primary flex items-center justify-end gap-1">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+            Cloud Ledger Synced
+          </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Auto-backup 2 mins ago</span>
+</div>
+<button class="flex items-center gap-space-xs px-space-xl py-space-sm rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm hover:bg-primary transition-colors" onclick="downloadStatement()">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+<span>Generate Statement (.xlsx)</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+    function exportSimulation() {
+      const btn = event.currentTarget;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<span class="material-symbols-outlined text-primary text-[18px] animate-spin">refresh</span><span>Exporting Live Sheet...</span>`;
+      setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span><span>Export Complete</span>`;
+        setTimeout(() => { btn.innerHTML = originalText; }, 2500);
+      }, 900);
+    }
+
+    function downloadStatement() {
+      const btn = event.currentTarget;
+      const original = btn.innerHTML;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[20px] animate-spin">sync</span><span>Preparing Master Ledger...</span>`;
+      setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined text-[20px]">done_all</span><span>Statement Downloaded</span>`;
+        setTimeout(() => { btn.innerHTML = original; }, 2500);
+      }, 1200);
+    }
+  </script>
+</div></main></div></body></html>

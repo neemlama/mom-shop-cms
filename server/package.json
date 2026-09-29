@@ -1,0 +1,14 @@
+{
+  "name": "mom-shop-server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "create-user": "node create-user.js"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "node-cron": "^3.0.3"
+  }
+}
