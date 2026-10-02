@@ -180,7 +180,8 @@ function cookieHeader(token, clear) {
   if (process.env.SECURE_COOKIES === '1') c += '; Secure';
   return c;
 }
-const OPEN = ['/login.html', '/api/login', '/api/register', '/api/health'];
+const OPEN = ['/login.html', '/install.html', '/manifest.webmanifest', '/sw.js', '/pwa.js', '/api/login', '/api/register', '/api/health'];
+const OPEN_PREFIX = ['/icons/'];
 /* Light throttle on auth endpoints: 30 tries per IP per 5 min. */
 const attempts = new Map();
 function throttle(req, res, next) {
@@ -194,7 +195,7 @@ function throttle(req, res, next) {
   next();
 }
 app.use((req, res, next) => {
-  if (OPEN.includes(req.path)) return next();
+  if (OPEN.includes(req.path) || OPEN_PREFIX.some(p => req.path.startsWith(p))) return next();
   const user = auth.check(getCookies(req).sid);
   if (!user) {
     if (req.path.startsWith('/api/')) return res.status(401).json({ ok: false, error: 'login required' });
@@ -292,6 +293,11 @@ app.post('/api/reports/generate', async (req, res) => {
     const meta = await buildMonthReport(y, m, shop);
     res.json({ ok: true, ...meta });
   } catch (e) { res.status(500).json({ ok: false, error: String(e.message || e) }); }
+});
+
+app.get('/manifest.webmanifest', (req, res) => {
+  res.type('application/manifest+json');
+  res.sendFile(path.join(ROOT, 'manifest.webmanifest'));
 });
 
 app.use(express.static(ROOT));

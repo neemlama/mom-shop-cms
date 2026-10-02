@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Install - Mom Shop CMS</title>
+<link rel="manifest" href="/manifest.webmanifest"/>
+<meta name="theme-color" content="#4F46E5"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="Mom Shop"/>
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png"/>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 p-6 max-w-md mx-auto">
+<h1 class="text-2xl font-bold text-slate-900">Install Mom Shop</h1>
+<p class="text-slate-500 text-sm mt-1">Adds an icon to your home screen. Opens full-screen like an app.</p>
+<button data-install-btn onclick="momShopInstall()" style="display:none" class="mt-4 w-full bg-indigo-600 text-white rounded-lg py-3 font-semibold">Install app</button>
+<div class="bg-white border border-slate-200 rounded-2xl p-5 mt-4">
+<b>Android (Chrome)</b>
+<ol class="text-sm text-slate-600 list-decimal ml-5 mt-2 space-y-1">
+<li>Open this site in Chrome</li>
+<li>Tap <b>⋮ menu &gt; Add to Home screen</b> or <b>Install app</b></li>
+<li>Confirm Add — icon appears on home screen</li>
+</ol>
+</div>
+<div class="bg-white border border-slate-200 rounded-2xl p-5 mt-4">
+<b>iPhone (Safari — required)</b>
+<ol class="text-sm text-slate-600 list-decimal ml-5 mt-2 space-y-1">
+<li>Open this site in <b>Safari</b> (not Chrome)</li>
+<li>Tap <b>Share ⬆ &gt; Add to Home Screen</b></li>
+<li>Tap Add — icon appears on home screen</li>
+</ol>
+<p class="text-xs text-slate-400 mt-2">iPhones cannot install from Chrome — must use Safari.</p>
+</div>
+<a href="/" class="block text-center text-indigo-600 text-sm mt-4">&larr; Back to app</a>
+<script src="/pwa.js"></script>
+</body></html>
