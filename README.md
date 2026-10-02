@@ -1,7 +1,12 @@
 # Mom Shop CMS - MVP
 
+Live: https://137-23-33-143.nip.io (install page: /install.html)
 Flow: Live paper -> Save as Potential -> Phone call -> Confirm / Cancel -> Pack/Ship/Deliver
 No TikTok scraping.
+
+## Deploy (auto)
+Push to `master` runs CI checks, then auto-deploys to the Oracle VM (see `.github/workflows/`).
+Needs repo secrets: `VM_HOST`, `VM_USER`, `SSH_PRIVATE_KEY`.
 
 ## Structure
 - `server/` - Express cloud server (auth, sync, BS month-end Excel reports 23:30 NPT)
