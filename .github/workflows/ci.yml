@@ -1,0 +1,27 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: node --check server/server.js
+      - run: npm install --production
+        working-directory: server
+      - run: |
+          node server.js &
+          SRV=$!
+          sleep 4
+          curl -sf localhost:3000/api/health
+          curl -sf -o /dev/null localhost:3000/manifest.webmanifest
+          curl -sf -o /dev/null localhost:3000/install.html
+          curl -sf -o /dev/null localhost:3000/icons/icon-192.png
+          kill $SRV
+        working-directory: server

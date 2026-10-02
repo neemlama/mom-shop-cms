@@ -1,0 +1,39 @@
+name: Deploy
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build bundle
+        run: git archive --format=tar.gz -o mom-shop-deploy.tar.gz HEAD
+      - name: Upload bundle
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: mom-shop-deploy.tar.gz
+          target: ~/
+      - name: Extract, install, restart
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd ~
+            sudo chown -R $(whoami):$(whoami) ~/server ~/stitch-replica 2>/dev/null || true
+            tar xzf ~/mom-shop-deploy.tar.gz
+            cd ~/server
+            npm install --production
+            sudo systemctl restart mom-shop
+            sleep 4
+            curl -sf localhost:3000/api/health
+            curl -sf -o /dev/null localhost:3000/manifest.webmanifest
+            curl -sf -o /dev/null localhost:3000/install.html
+            systemctl is-active mom-shop
