@@ -56,7 +56,7 @@ function initYears(){
   const yrs=[...new Set(load().map(x=>{const b=adToBs(x.completedAt||x.createdAt);return b?b.y:null}).filter(Boolean))].sort().reverse();
   $('fYear').innerHTML='<option value="">All</option>'+yrs.map(y=>`<option>${y}</option>`).join('');
 }
-let period='all';
+let period='today';
 function setPeriod(p){ period=p; render() }
 function todayBs(){ return adToBs(new Date().toISOString()) }
 function filtered(){

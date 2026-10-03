@@ -38,10 +38,16 @@
 
 <div class="bg-white border border-slate-200 rounded-2xl p-4 mt-4 shadow-sm overflow-x-auto">
   <h2 class="font-bold text-slate-900">Monthly statement <span id="mtScope" class="text-sm font-normal text-slate-400"></span></h2>
-  <table class="w-full text-sm mt-2 num"><thead><tr class="text-left text-slate-400 text-xs">
-    <th class="py-2">MONTH</th><th class="text-right">ORDERS</th><th class="text-right">REVENUE</th><th class="text-right">COST</th><th class="text-right">PROFIT</th><th class="text-right">DELIV.</th>
-  </tr></thead><tbody id="mtBody"></tbody>
-  <tfoot><tr class="font-bold border-t"><td class="py-2">Total</td><td class="text-right" id="mtOrders"></td><td class="text-right" id="mtRev"></td><td class="text-right" id="mtCost"></td><td class="text-right text-indigo-600" id="mtProf"></td><td class="text-right" id="mtDel"></td></tr></tfoot></table>
+  <div id="calWrap">
+    <div class="flex justify-between items-center mt-2">
+      <div id="calTitle" class="font-bold text-sm"></div>
+    </div>
+    <div id="calStats" class="grid grid-cols-3 gap-2 mt-2 text-center text-sm"></div>
+    <div class="grid grid-cols-7 gap-1 mt-2 text-center text-xs text-slate-400"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+    <div id="calGrid" class="grid grid-cols-7 gap-1 mt-1"></div>
+    <div id="dayBox" class="mt-2"></div>
+    <div id="calList" class="mt-2 text-sm"></div>
+  </div>
 </div>
 
 <div class="flex gap-2 mt-4">
@@ -93,21 +99,29 @@ function init(){
   if(now&&!yrs.includes(now.y))yrs.push(now.y);
   yrs.sort().reverse();
   $('fYear').innerHTML=yrs.map(y=>`<option>${y}</option>`).join('')||'<option>2083</option>';
-  $('fMonth').innerHTML='<option value="">Full year</option>'+BS_MONTHS.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+  $('fMonth').innerHTML=BS_MONTHS.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+  $('fMonth').value=String((now&&now.m)||6);
 }
+function monthLen(y,m){ try{ if(typeof BS_2083!=='undefined'&&y===2083) return BS_2083[m-1]; }catch(e){} return 0; }
+function bsToAdDate(y,m,d){ try{ if(y!==2083||typeof BS_2083==='undefined'||typeof BS_ANCHOR==='undefined') return null; let off=0; for(let i=0;i<m-1;i++) off+=BS_2083[i]; off+=d-1; return new Date(BS_ANCHOR+off*864e5); }catch(e){ return null; } }
+function pickMonth(i){ $('fMonth').value=String(i); render(); }
+function clearMonth(){ $('fMonth').value=''; render(); }
+let selDay=null;
+function pickDay(d){ selDay=(selDay===d)?null:d; render(); }
+function esc(s){ return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function inScope(x){
-  const y=Number($('fYear').value), m=$('fMonth').value;
+  const y=Number($('fYear').value), m=Number($('fMonth').value||6);
   const b=adToBs(x.completedAt||x.createdAt);
   if(!b)return false;
   if(b.y!==y)return false;
-  if(m&&b.m!==Number(m))return false;
+  if(b.m!==m)return false;
   return true;
 }
 function render(){
-  const y=Number($('fYear').value), m=$('fMonth').value;
+  const y=Number($('fYear').value), m=Number($('fMonth').value||6);
   const set=load().filter(inScope);
   const s=sums(set);
-  const scopeName=(m?BS_MONTHS[Number(m)-1]+' ':'Full year ')+y;
+  const scopeName=BS_MONTHS[m-1]+' '+y;
   $('plScope').textContent='· '+scopeName+' · '+s.n+' orders';
   $('plRows').innerHTML=
     prow('Gross sales (selling total)',s.ss)+
@@ -123,16 +137,65 @@ function render(){
     prow('To collect total (revenue + delivery)',a.fin,true)+
     prow('Revenue yours (ex delivery)',a.rev,true)+
     prow('Total profit sitting in orders',a.prof,true,'text-indigo-600');
-  $('mtScope').textContent='· BS '+y;
-  let tn=0,tr=0,tc=0,tp=0,td=0,html='';
-  for(let i=1;i<=12;i++){
-    const rows=load().filter(x=>{const b=adToBs(x.completedAt||x.createdAt);return b&&b.y===y&&b.m===i});
-    const r=sums(rows);
-    tn+=r.n; tr+=r.rev; tc+=r.wc; tp+=r.prof; td+=r.del;
-    html+=`<tr class="border-t border-slate-100"><td class="py-2">${BS_MONTHS[i-1]}</td><td class="text-right">${r.n}</td><td class="text-right">${f(r.rev)}</td><td class="text-right">${f(r.wc)}</td><td class="text-right ${r.prof<0?'text-rose-600':''}">${f(r.prof)}</td><td class="text-right text-slate-400">${f(r.del)}</td></tr>`;
+  $('mtScope').textContent='· BS '+y+' · '+BS_MONTHS[m-1];
+  renderCal(y,m);
+}
+function renderCal(y,m){
+  const ym=y+'-'+m;
+  if(window._lastYM!==ym){ window._lastYM=ym; selDay=null; }
+  const days=monthLen(y,m);
+  const list=load().filter(x=>{const b=adToBs(x.completedAt||x.createdAt);return b&&b.y===y&&b.m===m});
+  const byDay={}; list.forEach(x=>{const b=adToBs(x.completedAt||x.createdAt); if(!b)return; (byDay[b.d]=byDay[b.d]||[]).push(x); });
+  const tot=sums(list);
+  $('calTitle').textContent=BS_MONTHS[m-1]+' '+y;
+  $('calStats').innerHTML=
+    `<div class="bg-slate-50 rounded-lg p-2"><small class="text-slate-400 text-xs">ORDERS</small><div class="font-bold num">${tot.n}</div></div>`+
+    `<div class="bg-slate-50 rounded-lg p-2"><small class="text-slate-400 text-xs">REVENUE</small><div class="font-bold num">${f(tot.rev)}</div></div>`+
+    `<div class="bg-slate-50 rounded-lg p-2"><small class="text-slate-400 text-xs">COST</small><div class="font-bold num">${f(tot.wc)}</div></div>`+
+    `<div class="bg-indigo-50 rounded-lg p-2"><small class="text-slate-400 text-xs">PROFIT</small><div class="font-bold text-indigo-600 num">${f(tot.prof)}</div></div>`+
+    `<div class="bg-slate-50 rounded-lg p-2"><small class="text-slate-400 text-xs">DELIV.</small><div class="font-bold num">${f(tot.del)}</div></div>`+
+    `<div class="bg-slate-50 rounded-lg p-2"><small class="text-slate-400 text-xs">ADVANCE</small><div class="font-bold num">${f(tot.adv)}</div></div>`;
+  const renderDayBox=()=>{
+    if(!selDay||!byDay[selDay]){ $('dayBox').innerHTML=selDay?`<div class="bg-slate-50 border rounded-xl p-3 text-sm text-slate-500">${BS_MONTHS[m-1]} ${selDay}: no orders.</div>`:''; return; }
+    const arr=[...byDay[selDay]].sort((a,b)=>(b.completedAt||b.createdAt||'').localeCompare(a.completedAt||a.createdAt||''));
+    const r=sums(arr);
+    $('dayBox').innerHTML=`<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3">
+      <div class="flex justify-between items-center"><b>${BS_MONTHS[m-1]} ${selDay} · ${arr.length} orders</b><button onclick="pickDay(${selDay})" class="text-xs bg-white border rounded-lg px-2 py-1">Close</button></div>
+      <div class="text-xs text-slate-500 num mt-1">Revenue ${f(r.rev)} · Profit ${f(r.prof)} · Delivery ${f(r.del)}</div>
+      <div class="mt-2 space-y-2">${arr.map(x=>{const it=getItems(x); return `<div class="bg-white border rounded-lg p-2 text-sm">
+        <div class="flex justify-between"><b>${esc(x.name)}</b><span class="text-xs px-2 py-0.5 rounded-full ${x.status==='completed'?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'}">${x.status||'active'}</span></div>
+        <div class="text-xs text-slate-500 num">${esc(x.phone||'')} ${esc(x.address)?'• '+esc(x.address):''}</div>
+        <div class="text-xs mt-1">${it.map(i=>`${esc(i.name||'Item')} x ${i.qty} @ ${(Number(i.sp)||0).toLocaleString()}`).join('; ')}</div>
+        <div class="text-xs num mt-1">Final ${f(x.fin)} · Adv ${f(x.adv)} · Bal ${f(x.bal)} · Profit <b class="text-indigo-600">${f(x.prof)}</b></div>
+      </div>`}).join('')}</div>
+    </div>`;
+  };
+  if(!days){
+    $('calGrid').innerHTML='';
+    const keys=Object.keys(byDay).map(Number).sort((a,b)=>b-a);
+    $('calList').innerHTML=keys.length?keys.map(d=>{const r=sums(byDay[d]); return `<div onclick="pickDay(${d})" class="flex justify-between py-1.5 border-b border-slate-100 cursor-pointer hover:bg-indigo-50"><span>${BS_MONTHS[m-1]} ${d} · ${r.n} orders</span><span class="num">rev ${f(r.rev)} · profit <b class="text-indigo-600">${f(r.prof)}</b></span></div>`}).join(''):'<p class="text-sm text-slate-400">No sales this month. Daily calendar needs BS 2083 table.</p>';
+    renderDayBox();
+    return;
   }
-  $('mtBody').innerHTML=html;
-  $('mtOrders').textContent=tn; $('mtRev').textContent=f(tr); $('mtCost').textContent=f(tc); $('mtProf').textContent=f(tp); $('mtDel').textContent=f(td);
+  const start=bsToAdDate(y,m,1)?bsToAdDate(y,m,1).getUTCDay():0;
+  const tBs=adToBs(new Date().toISOString());
+  let html='';
+  for(let i=0;i<start;i++) html+='<div></div>';
+  for(let d=1;d<=days;d++){
+    const arr=byDay[d]||[]; const r=sums(arr);
+    const ad=bsToAdDate(y,m,d);
+    const adStr=ad?ad.toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'}):'';
+    const isToday=tBs&&tBs.y===y&&tBs.m===m&&tBs.d===d;
+    const isSel=selDay===d;
+    html+=`<div onclick="pickDay(${d})" class="border rounded-lg p-1 min-h-[64px] text-left cursor-pointer hover:ring-1 hover:ring-indigo-400 ${r.n?'bg-indigo-50 border-indigo-200':'bg-slate-50 border-slate-100'} ${isToday?'ring-2 ring-indigo-600':''} ${isSel?'ring-2 ring-emerald-500':''}">
+      <div class="text-sm font-bold">${d}</div><div class="text-[10px] text-slate-400">${adStr}</div>
+      ${r.n?`<div class="text-[11px] font-semibold num">${r.n} ord</div><div class="text-[11px] num">${f(r.rev)}</div>`:'<div class="text-[10px] text-slate-300">-</div>'}
+    </div>`;
+  }
+  $('calGrid').innerHTML=html;
+  const keys=Object.keys(byDay).map(Number).sort((a,b)=>b-a);
+  $('calList').innerHTML=keys.length?'<div class="font-bold mt-2 mb-1 text-sm">Daily details (tap a date)</div>'+keys.map(d=>{const r=sums(byDay[d]); return `<div onclick="pickDay(${d})" class="flex justify-between py-1.5 border-b border-slate-100 cursor-pointer hover:bg-indigo-50"><span>${BS_MONTHS[m-1]} ${d} · ${r.n} orders</span><span class="num">rev ${f(r.rev)} · profit <b class="text-indigo-600">${f(r.prof)}</b></span></div>`}).join(''):'<p class="text-sm text-slate-400 mt-2">No sales yet this month.</p>';
+  renderDayBox();
 }
 function exportCSV(){
   const y=Number($('fYear').value);

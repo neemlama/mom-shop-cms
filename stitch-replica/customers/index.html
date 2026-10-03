@@ -82,15 +82,17 @@ const $=id=>document.getElementById(id);
 const n=v=>Number(v||0);
 function rows(){ return [...document.querySelectorAll('#itemRows .irow')].map(r=>({name:r.querySelector('.rn').value.trim(),qty:n(r.querySelector('.rq').value),ws:n(r.querySelector('.rw').value),sp:n(r.querySelector('.rs').value)})) }
 function addRow(d){
-  d=d||{name:'',qty:1,ws:0,sp:0};
+  d=d||{name:'',qty:1,ws:'',sp:''};
+  const wsVal=(d.ws==null||d.ws===''||Number(d.ws)===0)?'':d.ws;
+  const spVal=(d.sp==null||d.sp===''||Number(d.sp)===0)?'':d.sp;
   const div=document.createElement('div');
   div.className='irow bg-slate-50 border border-slate-200 rounded-xl p-2 grid gap-2';
   div.innerHTML=`<div class="grid grid-cols-3 gap-2">
     <input placeholder="Item (ex Pants L)" value="${esc(d.name)}" class="rn col-span-2 border border-slate-300 rounded-lg px-3 py-2"/>
     <input type="number" min="1" value="${d.qty}" class="rq border border-slate-300 rounded-lg px-3 py-2 num"/></div>
   <div class="grid grid-cols-2 gap-2">
-    <div><label class="text-xs text-slate-500">WHOLESALE</label><input type="number" min="0" value="${d.ws}" class="rw w-full border border-slate-300 rounded-lg px-3 py-2 num"/></div>
-    <div><label class="text-xs text-slate-500">SELLING</label><input type="number" min="0" value="${d.sp}" class="rs w-full border border-slate-300 rounded-lg px-3 py-2 num"/></div>
+    <div><label class="text-xs text-slate-500">WHOLESALE</label><input type="number" min="0" placeholder="Wholesale" value="${wsVal}" class="rw w-full border border-slate-300 rounded-lg px-3 py-2 num"/></div>
+    <div><label class="text-xs text-slate-500">SELLING</label><input type="number" min="0" placeholder="Selling" value="${spVal}" class="rs w-full border border-slate-300 rounded-lg px-3 py-2 num"/></div>
   </div>
   <button type="button" class="text-rose-500 text-xs text-left">Remove item</button>`;
   div.querySelectorAll('input').forEach(i=>i.addEventListener('input',calc));
